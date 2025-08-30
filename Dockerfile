@@ -1,9 +1,9 @@
 FROM caddy:builder AS builder
 
-ENV GOPROXY=direct
+ENV GOPROXY=https://proxy.golang.org,direct
 ENV GOSUMDB=off
 
-# Build caddy with all modules using direct git access
+# Build caddy with all modules - removed incompatible caddy-git module
 RUN xcaddy build \
     --with github.com/caddy-dns/cloudflare \
     --with github.com/lucaslorentz/caddy-docker-proxy/v2 \
