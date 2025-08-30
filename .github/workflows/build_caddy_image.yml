@@ -1,0 +1,37 @@
+name: Build Caddy Multi-Arch
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-upload:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up QEMU for multi-arch builds
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build multi-arch Caddy image
+        run: |
+          docker buildx build \
+            --platform linux/amd64,linux/arm64 \
+            -t caddy-custom:latest \
+            .
+
+      - name: Save Docker image as tarball
+        run: |
+          docker save caddy-custom:latest -o caddy-custom.tar
+
+      - name: Upload Docker image artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: caddy-custom-image
+          path: caddy-custom.tar
