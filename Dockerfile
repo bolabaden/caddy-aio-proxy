@@ -1,8 +1,9 @@
 FROM caddy:builder AS builder
 
 ENV GOPROXY=https://proxy.golang.org,direct
-ENV GOSUMDB=sum.golang.org
+ENV GOSUMDB=off
 
+# Build caddy with all modules - removed incompatible caddy-git module
 RUN xcaddy build \
     --with github.com/caddy-dns/cloudflare \
     --with github.com/lucaslorentz/caddy-docker-proxy/v2 \
@@ -10,7 +11,6 @@ RUN xcaddy build \
     --with github.com/hslatman/caddy-crowdsec-bouncer/layer4 \
     --with github.com/greenpau/caddy-security \
     --with github.com/RussellLuo/caddy-ext/ratelimit \
-    --with github.com/abiosoft/caddy-git \
     --with github.com/tailscale/caddy-tailscale \
     --with github.com/WingLim/caddy-webhook \
     --with github.com/porech/caddy-maxmind-geolocation && \
